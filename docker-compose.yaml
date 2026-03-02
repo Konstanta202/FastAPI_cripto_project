@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  
+  backend-app:
+    build:
+      context: ./backend
+    env_file:
+      - backend/.env
+    ports:
+      - "8000:8000"
+
+  frontend-app:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    # volumes:
+      # - ./frontend:/app
+      # - /app/node_modules
+    # environment:
+    #   - VITE_HOST=0.0.0.0
+    #   - VITE_PORT=5173
+    networks:
+      - app-network
+    depends_on:
+      - backend-app
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy-telecom
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
