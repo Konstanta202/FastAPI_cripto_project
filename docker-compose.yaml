@@ -20,6 +20,8 @@ services:
     # environment:
     #   - VITE_HOST=0.0.0.0
     #   - VITE_PORT=5173
+    environment:
+      - VITE_API_URL=/api
     networks:
       - app-network
     depends_on:
@@ -30,9 +32,15 @@ services:
     container_name: nginx-proxy-telecom
     ports:
       - "80:80"
-      - "443:443"
+      # - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/nginx-temp.conf:/etc/nginx/nginx-temp.conf
     networks:
       - app-network
+    depends_on:
+      - backend-app
+      - frontend-app
 
 networks:
   app-network:
