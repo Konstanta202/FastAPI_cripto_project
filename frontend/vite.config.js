@@ -11,20 +11,42 @@ export default defineConfig({
     },
   },
   server: {
-    host: true,
+    host: '0.0.0.0',
     port: 5173,
     allowedHosts: [
-      'frontend-app',           // Имя сервиса в Docker
+      'frontend-app',
       'localhost',
       '127.0.0.1',
-      '.138.124.74.71',         // Твой IP (с точкой в начале для всех subdomains)
-      '.telecom.ru',            // Если есть домен
-      'all'                      // РАЗРЕШИТЬ ВСЕ (для разработки)
+      '.138.124.74.71',
+      '.wishlistprice.ru',
+      '.telecom.ru',
+      'all'
     ],
     cors: {
-      origin: '*',
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization']
-    }
+      origin: true,  // Изменено с '*' на true для лучшей совместимости
+      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+      credentials: true,
+      preflightContinue: false,
+      optionsSuccessStatus: 204
+    },
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      port: 5173,
+      clientPort: 5173
+    },
+    watch: {
+      usePolling: true,
+      interval: 1000
+    },
+    strictPort: true,
+    force: true
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 5173,
+    allowedHosts: ['all'],
+    cors: true
   }
 })
