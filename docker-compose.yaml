@@ -1,46 +1,40 @@
 version: "3.9"
 
 services:
-  
   backend-app:
-    build:
-      context: ./backend
+    container_name: backend-app
+    build: ./backend
     env_file:
       - backend/.env
     ports:
       - "8000:8000"
+    networks:
+      - app-network
 
   frontend-app:
+    container_name: frontend-app
     build: ./frontend
     ports:
       - "5173:5173"
-    # volumes:
-      # - ./frontend:/app
-      # - /app/node_modules
-    # environment:
-    #   - VITE_HOST=0.0.0.0
-    #   - VITE_PORT=5173
     environment:
       - VITE_API_URL=/api
     networks:
       - app-network
-    depends_on:
-      - backend-app
 
   nginx:
     image: nginx:alpine
     container_name: nginx-proxy-telecom
     ports:
       - "80:80"
-      # - "443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/nginx-temp.conf:/etc/nginx/nginx-temp.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - app-network
     depends_on:
-      - backend-app
       - frontend-app
+      - backend-app
+
+    restart: unless-stopped
 
 networks:
   app-network:
