@@ -10,4 +10,21 @@ export default defineConfig({
       plugins: [tailwindcss()],
     },
   },
+  server: {
+    host: true,
+    port: 5173,
+    allowedHosts: [
+      'frontend-app',           // Имя сервиса в Docker
+      'localhost',
+      '127.0.0.1',
+      '.138.124.74.71',         // Твой IP (с точкой в начале для всех subdomains)
+      '.telecom.ru',            // Если есть домен
+      'all'                      // РАЗРЕШИТЬ ВСЕ (для разработки)
+    ],
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization']
+    }
+  }
 })
